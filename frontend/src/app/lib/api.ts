@@ -1,0 +1,28 @@
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+
+export async function apiFetch(path: string, options: RequestInit = {}) {
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  const headers: any = {
+    "Content-Type": "application/json",
+    ...(options.headers || {}),
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  const res = await fetch(`${BASE_URL}${path}`, {
+    ...options,
+    headers,
+  });
+
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    throw new Error(data.message || "Request failed");
+  }
+
+  return data;
+}
