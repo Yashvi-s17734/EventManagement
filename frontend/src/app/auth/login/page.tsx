@@ -19,13 +19,15 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>)
     setLoading(true);
 
     try {
-      const res = await apiFetch("/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-      });
+      const data = await apiFetch("/auth/login", {
+  method: "POST",
+  body: JSON.stringify({ email, password }),
+});
 
-      localStorage.setItem("token", res.token);
-      localStorage.setItem("user", JSON.stringify(res.user));
+localStorage.setItem("token", data.token);
+localStorage.setItem("role", data.role);
+
+
 
       router.push("/");
     } catch (err) {

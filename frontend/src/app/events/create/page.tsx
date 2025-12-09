@@ -18,6 +18,8 @@ export default function CreateEvent() {
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+ 
+
 
   function handleBannerChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -73,7 +75,16 @@ export default function CreateEvent() {
       setLoading(false);
     }
   }
+ const role =
+  typeof window !== "undefined" ? localStorage.getItem("role") : null;
 
+if (role !== "ORGANIZER" && role !== "ADMIN") {
+  return (
+    <p className="text-center text-red-400 mt-20 text-xl">
+      You are not allowed to create events.
+    </p>
+  );
+}
   return (
     <div className="min-h-screen px-6 py-10 bg-[#0b001a] flex justify-center text-white">
       <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 
