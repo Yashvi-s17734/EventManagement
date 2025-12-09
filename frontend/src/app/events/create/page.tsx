@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { apiFetch, BASE_URL } from "@/lib/api";
 import { useRouter } from "next/navigation";
+import { Calendar, MapPin, Image as ImageIcon } from "lucide-react";
 
 export default function CreateEvent() {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function CreateEvent() {
     try {
       if (!banner) throw new Error("Please upload a banner image");
 
-      // STEP 1: Upload banner
+      // 1. Upload banner
       const formData = new FormData();
       formData.append("banner", banner);
 
@@ -51,7 +52,7 @@ export default function CreateEvent() {
 
       const bannerUrl = uploadData.url;
 
-      // STEP 2: Create event
+      // 2. Create event
       await apiFetch("/events", {
         method: "POST",
         body: JSON.stringify({
@@ -67,66 +68,83 @@ export default function CreateEvent() {
       alert("Event created successfully!");
       router.push("/events");
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Something went wrong";
-      setError(message);
+      setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className="min-h-screen p-6 flex justify-center bg-gradient-to-b from-[#180033] to-[#0b001a] text-white">
-      <div className="w-full max-w-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-2xl shadow-[0_0_40px_rgba(142,65,255,0.4)]">
+    <div className="min-h-screen px-6 py-10 bg-[#0b001a] flex justify-center text-white">
+      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 
+                      bg-white/5 backdrop-blur-2xl border border-white/10 
+                      p-10 rounded-3xl shadow-[0_0_50px_rgba(142,65,255,0.35)]">
 
-        <h1 className="text-3xl font-bold text-center mb-6 text-purple-200">
-          Create New Event
-        </h1>
+        {/* LEFT PANEL — FORM */}
+        <form onSubmit={handleSubmit} className="space-y-6">
 
-        {error && (
-          <p className="text-red-400 text-center mb-4 font-medium">{error}</p>
-        )}
+          <h1 className="text-3xl font-bold text-purple-200 mb-4">
+            Create Event
+          </h1>
 
-        {/* Banner Preview */}
-        {bannerPreview && (
-          <img
-            src={bannerPreview}
-            alt="Banner Preview"
-            className="w-full rounded-xl mb-6 shadow-lg"
-          />
-        )}
+          {error && (
+            <p className="text-red-400 text-center mb-4 font-medium">{error}</p>
+          )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-
+          {/* Event Title */}
           <div>
-            <label className="block text-purple-200 mb-1">Event Title</label>
+            <label className="block mb-1 text-purple-200">Event Name</label>
             <input
               type="text"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl 
-                         text-white focus:border-purple-500 focus:ring-2 focus:ring-purple-600 outline-none"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl
+                         focus:border-purple-500 focus:ring-2 focus:ring-purple-600 outline-none"
             />
           </div>
 
+          {/* Date */}
           <div>
-            <label className="block text-purple-200 mb-1">Description</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl 
-                         text-white focus:border-purple-500 focus:ring-2 focus:ring-purple-600 outline-none min-h-[100px]"
-            ></textarea>
+            <label className="block mb-1 text-purple-200">Event Date</label>
+            <div className="flex items-center gap-3 px-4 py-3 bg-white/10 border border-white/20 
+                            rounded-xl focus-within:border-purple-500">
+              <Calendar size={20} />
+              <input
+                type="datetime-local"
+                required
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="bg-transparent w-full outline-none"
+              />
+            </div>
           </div>
 
+          {/* Location */}
           <div>
-            <label className="block text-purple-200 mb-1">Category</label>
+            <label className="block mb-1 text-purple-200">Location</label>
+            <div className="flex items-center gap-3 px-4 py-3 bg-white/10 border border-white/20 
+                            rounded-xl focus-within:border-purple-500">
+              <MapPin size={20} />
+              <input
+                type="text"
+                required
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                className="bg-transparent w-full outline-none"
+                placeholder="Online or Offline Event"
+              />
+            </div>
+          </div>
+
+          {/* Category */}
+          <div>
+            <label className="block mb-1 text-purple-200">Category</label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl 
-                         text-white focus:border-purple-500 focus:ring-2 focus:ring-purple-600 outline-none"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl
+                         focus:border-purple-500 focus:ring-2 focus:ring-purple-600 outline-none text-white"
             >
               <option className="text-black">Technology</option>
               <option className="text-black">Business</option>
@@ -136,49 +154,64 @@ export default function CreateEvent() {
             </select>
           </div>
 
+          {/* Description */}
           <div>
-            <label className="block text-purple-200 mb-1">Location</label>
-            <input
-              type="text"
-              required
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl 
-                         text-white focus:border-purple-500 focus:ring-2 focus:ring-purple-600 outline-none"
-            />
+            <label className="block mb-1 text-purple-200">Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl min-h-[120px]
+                         focus:border-purple-500 focus:ring-2 focus:ring-purple-600 outline-none"
+            ></textarea>
           </div>
 
+          {/* Banner Upload */}
           <div>
-            <label className="block text-purple-200 mb-1">Event Date</label>
-            <input
-              type="datetime-local"
-              required
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl 
-                         text-white focus:border-purple-500 focus:ring-2 focus:ring-purple-600 outline-none"
-            />
-          </div>
-
-          <div>
-            <label className="block text-purple-200 mb-1">Event Banner</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleBannerChange}
-              className="w-full text-white p-2"
-            />
+            <label className="block mb-1 text-purple-200">Event Banner</label>
+            <div className="flex items-center gap-4 bg-white/10 p-3 rounded-xl border border-white/20">
+              <ImageIcon size={24} className="text-purple-300" />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleBannerChange}
+                className="text-white"
+              />
+            </div>
           </div>
 
           <button
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-500 
+            className="w-full py-3 mt-4 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-500 
                        text-white font-semibold hover:scale-[1.02] transition-transform 
                        shadow-lg shadow-purple-700/40 disabled:opacity-50"
           >
             {loading ? "Creating..." : "Create Event"}
           </button>
         </form>
+
+        {/* RIGHT PANEL — BANNER PREVIEW */}
+        <div className="flex justify-center items-center">
+          <div className="w-full max-w-md bg-white/5 p-5 rounded-2xl border border-white/10 
+                          shadow-[0_0_35px_rgba(142,65,255,0.35)]">
+            <h2 className="text-xl font-semibold mb-3 text-purple-200">
+              Banner Preview
+            </h2>
+
+            {bannerPreview ? (
+              <img
+                src={bannerPreview}
+                className="w-full rounded-xl shadow-lg"
+                alt="preview"
+              />
+            ) : (
+              <div className="w-full h-64 bg-white/10 rounded-xl flex items-center justify-center 
+                              text-gray-400 border border-white/20">
+                No banner selected
+              </div>
+            )}
+          </div>
+        </div>
+
       </div>
     </div>
   );
