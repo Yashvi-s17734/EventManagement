@@ -8,12 +8,10 @@ export default function Home() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    const r = localStorage.getItem("role");
-    const t = localStorage.getItem("token");
+  setRole(localStorage.getItem("role"));
+  setName(localStorage.getItem("name"));
+}, []);
 
-    setRole(r);
-    setLoggedIn(!!t);
-  }, []);
 
   function logout() {
     localStorage.removeItem("token");

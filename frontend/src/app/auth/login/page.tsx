@@ -12,22 +12,22 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-async function handleSubmit(e: React.FormEvent<HTMLFormElement>) 
- {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
       const data = await apiFetch("/auth/login", {
-  method: "POST",
-  body: JSON.stringify({ email, password }),
-});
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
 
-localStorage.setItem("token", data.token);
-localStorage.setItem("role", data.role);
-
-
+      // ✅ FIX — backend returns: { user: {..}, token }
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("role", data.user.role);
+      localStorage.setItem("name", data.user.name);
+      localStorage.setItem("email", data.user.email);
 
       router.push("/");
     } catch (err) {

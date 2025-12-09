@@ -62,14 +62,7 @@ export default function EventsPage() {
     
 
     <div className="min-h-screen px-6 py-10 max-w-6xl mx-auto text-white">
-        {role === "ORGANIZER" && (
-  <Link
-    href="/events/create"
-    className="px-4 py-2 bg-purple-600 rounded-xl font-semibold shadow-lg hover:scale-105 transition"
-  >
-    + Create Event
-  </Link>
-)}
+    
       <h1 className="text-4xl font-bold text-purple-200 mb-8">Events</h1>
 
       {/* Category Icons Filter */}

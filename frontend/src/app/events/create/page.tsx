@@ -87,6 +87,14 @@ if (role !== "ORGANIZER" && role !== "ADMIN") {
 }
   return (
     <div className="min-h-screen px-6 py-10 bg-[#0b001a] flex justify-center text-white">
+          {role === "ORGANIZER" && (
+  <Link
+    href="/events/create"
+    className="px-4 py-2 bg-purple-600 rounded-xl font-semibold shadow-lg hover:scale-105 transition"
+  >
+    + Create Event
+  </Link>
+)}
       <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 
                       bg-white/5 backdrop-blur-2xl border border-white/10 
                       p-10 rounded-3xl shadow-[0_0_50px_rgba(142,65,255,0.35)]">
