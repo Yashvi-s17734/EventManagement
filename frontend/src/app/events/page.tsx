@@ -83,15 +83,12 @@ export default function EventsPage() {
                        rounded-xl p-4 hover:scale-[1.02] transition-transform 
                        shadow-[0_0_20px_rgba(142,65,255,0.3)]"
           >
-            <img
-              src={
-                ev.banner
-                  ? process.env.NEXT_PUBLIC_API_URL + ev.banner
-                  : "https://via.placeholder.com/400x200"
-              }
-              alt="Event Banner"
-              className="w-full h-44 object-cover rounded-lg mb-3"
-            />
+      <img
+  src={ev.banner ?? "/default.jpg"}  
+  alt="event banner"
+  className="w-full h-40 object-cover rounded-xl mb-3"
+/>
+
 
             <h3 className="text-xl font-semibold mb-1 text-purple-200">
               {ev.title}
