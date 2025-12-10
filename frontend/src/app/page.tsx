@@ -33,7 +33,7 @@ export default function Home() {
 
       {loggedIn ? (
         <p className="text-purple-300 mb-10 text-lg">
-          Welcome back{name ? `, ${name.toUpperCase()}` : ""}
+          Welcome back{name ? `, ${name.charAt(0).toUpperCase()}${name.slice(1)}` : ""}
         </p>
       ) : (
         <p className="text-purple-300 mb-10 text-lg">
@@ -49,8 +49,6 @@ export default function Home() {
         >
           View Events
         </Link>
-
-        {/* Create Event (Organizer/Admin) */}
         {(role === "ORGANIZER" || role === "ADMIN") && loggedIn && (
           <Link
             href="/events/create"
