@@ -30,4 +30,17 @@ model Event {
 
   organizerId String @db.ObjectId
   organizer User @relation(fields:[organizerId], references: [id], name: "UserEvents")
+   tickets     Ticket[]
+}
+model Ticket {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  price       Int
+  totalSeats  Int
+  availableSeats Int
+
+  eventId     String   @db.ObjectId
+  event       Event    @relation(fields: [eventId], references: [id])
+
+  createdAt   DateTime @default(now())
 }

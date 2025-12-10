@@ -22,8 +22,6 @@ export default function LoginPage() {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
-
-      // ✅ FIX — backend returns: { user: {..}, token }
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.user.role);
       localStorage.setItem("name", data.user.name);

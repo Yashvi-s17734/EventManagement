@@ -61,7 +61,6 @@ export default function EventsPage() {
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-6xl mx-auto text-white">
-      {/* HEADER WITH CREATE BUTTON */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-4xl font-bold text-purple-200">Events</h1>
 
@@ -75,8 +74,6 @@ export default function EventsPage() {
           </Link>
         )}
       </div>
-
-      {/* Category Icons Filter */}
       <div className="flex gap-4 mb-8 overflow-x-auto pb-2">
         {categories.map((cat) => (
           <button
@@ -98,8 +95,6 @@ export default function EventsPage() {
           </button>
         ))}
       </div>
-
-      {/* Search bar */}
       <form
         onSubmit={applyFilters}
         className="flex gap-3 mb-8 bg-white/10 p-4 rounded-xl backdrop-blur-lg border border-white/20"
@@ -121,8 +116,6 @@ export default function EventsPage() {
           Apply
         </button>
       </form>
-
-      {/* Skeleton Loading Cards */}
       {loading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 animate-pulse">
           {[1, 2, 3, 4].map((i) => (
@@ -138,11 +131,7 @@ export default function EventsPage() {
           ))}
         </div>
       )}
-
-      {/* Error */}
       {error && <p className="text-red-400">{error}</p>}
-
-      {/* No Events Found */}
       {!loading && events.length === 0 && (
         <div className="mt-20 text-center text-gray-300 flex flex-col items-center">
           <Clapperboard size={60} className="text-purple-400 mb-4" />
