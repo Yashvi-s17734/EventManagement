@@ -6,14 +6,12 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const [role, setRole] = useState<string | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [name, setName] = useState(...)
-
+  const [name, setName] = useState<string | null>(null);
 
   useEffect(() => {
-  setRole(localStorage.getItem("role"));
-  setName(localStorage.getItem("name"));
-}, []);
-
+    setRole(localStorage.getItem("role"));
+    setName(localStorage.getItem("name"));
+  }, []);
 
   function logout() {
     localStorage.removeItem("token");
@@ -23,13 +21,11 @@ export default function Home() {
 
   return (
     <main className="p-6 min-h-screen text-white bg-gradient-to-b from-[#180033] to-[#0b001a]">
-
       <h1 className="text-4xl font-bold mb-3">Event Management Platform</h1>
       <p className="text-purple-300 mb-10 text-lg">Welcome to your dashboard</p>
 
       {/* MAIN NAVIGATION BUTTONS */}
       <div className="flex flex-wrap gap-4">
-
         {/* View Events - everyone can see */}
         <Link
           href="/events"
