@@ -30,8 +30,9 @@ export default function EventsPage() {
     { label: "Comedy", value: "Comedy", icon: Clapperboard },
     { label: "Workshop", value: "Workshop", icon: Wrench },
   ];
-  const role = typeof window !== "undefined" ? localStorage.getItem("role") : null;
 
+  const role =
+    typeof window !== "undefined" ? localStorage.getItem("role") : null;
 
   async function loadEvents() {
     try {
@@ -59,11 +60,21 @@ export default function EventsPage() {
   }
 
   return (
-    
-
     <div className="min-h-screen px-6 py-10 max-w-6xl mx-auto text-white">
-    
-      <h1 className="text-4xl font-bold text-purple-200 mb-8">Events</h1>
+      {/* HEADER WITH CREATE BUTTON */}
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-4xl font-bold text-purple-200">Events</h1>
+
+        {(role === "ORGANIZER" || role === "ADMIN") && (
+          <Link
+            href="/events/create"
+            className="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-fuchsia-500 
+                       rounded-xl font-semibold shadow-lg hover:scale-105 transition"
+          >
+            + Create Event
+          </Link>
+        )}
+      </div>
 
       {/* Category Icons Filter */}
       <div className="flex gap-4 mb-8 overflow-x-auto pb-2">
