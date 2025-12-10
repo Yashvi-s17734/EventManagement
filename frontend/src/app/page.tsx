@@ -17,10 +17,7 @@ export default function Home() {
     setRole(role);
     setName(name);
   }, []);
-  {
-    name?.toUpperCase();
-  }
-
+  
   const loggedIn = !!token;
 
   function logout() {
@@ -36,7 +33,7 @@ export default function Home() {
 
       {loggedIn ? (
         <p className="text-purple-300 mb-10 text-lg">
-          Welcome back{name ? `, ${name}` : ""}
+          Welcome back{name ? `, ${name.toUpperCase()}` : ""}
         </p>
       ) : (
         <p className="text-purple-300 mb-10 text-lg">
