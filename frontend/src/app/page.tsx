@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const [role, setRole] = useState<string | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [name, setName] = useState(...)
+
 
   useEffect(() => {
   setRole(localStorage.getItem("role"));
