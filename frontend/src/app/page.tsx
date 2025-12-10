@@ -5,28 +5,40 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const [role, setRole] = useState<string | null>(null);
-  const [loggedIn, setLoggedIn] = useState(false);
   const [name, setName] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
+    setToken(localStorage.getItem("token"));
     setRole(localStorage.getItem("role"));
     setName(localStorage.getItem("name"));
   }, []);
 
+  const loggedIn = !!token; // ✅ derived state (correct)
+
   function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
-    window.location.reload();
+    localStorage.removeItem("name");
+    window.location.href = "/"; // ✅ force reload
   }
 
   return (
     <main className="p-6 min-h-screen text-white bg-gradient-to-b from-[#180033] to-[#0b001a]">
       <h1 className="text-4xl font-bold mb-3">Event Management Platform</h1>
-      <p className="text-purple-300 mb-10 text-lg">Welcome to your dashboard</p>
 
-      {/* MAIN NAVIGATION BUTTONS */}
+      {loggedIn ? (
+        <p className="text-purple-300 mb-10 text-lg">
+          Welcome back{name ? `, ${name}` : ""} 👋
+        </p>
+      ) : (
+        <p className="text-purple-300 mb-10 text-lg">
+          Welcome to your dashboard
+        </p>
+      )}
+
       <div className="flex flex-wrap gap-4">
-        {/* View Events - everyone can see */}
+        {/* View Events */}
         <Link
           href="/events"
           className="px-6 py-3 bg-purple-600 rounded-xl hover:bg-purple-700 transition shadow-lg"
@@ -34,8 +46,8 @@ export default function Home() {
           View Events
         </Link>
 
-        {/* Create Event - ONLY for organizer or admin */}
-        {(role === "ORGANIZER" || role === "ADMIN") && (
+        {/* Create Event (Organizer/Admin) */}
+        {(role === "ORGANIZER" || role === "ADMIN") && loggedIn && (
           <Link
             href="/events/create"
             className="px-6 py-3 bg-fuchsia-600 rounded-xl hover:bg-fuchsia-700 transition shadow-lg"
@@ -44,7 +56,7 @@ export default function Home() {
           </Link>
         )}
 
-        {/* Login / Register (only when logged out) */}
+        {/* Login / Register */}
         {!loggedIn && (
           <>
             <Link
@@ -63,7 +75,7 @@ export default function Home() {
           </>
         )}
 
-        {/* Logout Button (if logged in) */}
+        {/* Logout */}
         {loggedIn && (
           <button
             onClick={logout}
@@ -74,7 +86,6 @@ export default function Home() {
         )}
       </div>
 
-      {/* ROLE BADGE */}
       {loggedIn && (
         <p className="mt-8 text-gray-300">
           Logged in as:{" "}
