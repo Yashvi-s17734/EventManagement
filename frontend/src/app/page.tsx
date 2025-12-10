@@ -11,9 +11,10 @@ export default function Home() {
   useEffect(() => {
     setToken(localStorage.getItem("token"));
     setRole(localStorage.getItem("role"));
-    setName(localStorage.getItem("name".toUpperCase()));
+    setName(localStorage.getItem("name"));
   }, []);
-
+  const storedName = localStorage.getItem("name");
+  setName(storedName ? storedName.toUpperCase() : null);
   const loggedIn = !!token;
 
   function logout() {
