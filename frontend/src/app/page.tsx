@@ -11,16 +11,16 @@ export default function Home() {
   useEffect(() => {
     setToken(localStorage.getItem("token"));
     setRole(localStorage.getItem("role"));
-    setName(localStorage.getItem("name"));
+    setName(localStorage.getItem("name".toUpperCase()));
   }, []);
 
-  const loggedIn = !!token; // ✅ derived state (correct)
+  const loggedIn = !!token;
 
   function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("name");
-    window.location.href = "/"; // ✅ force reload
+    window.location.href = "/";
   }
 
   return (
@@ -29,7 +29,7 @@ export default function Home() {
 
       {loggedIn ? (
         <p className="text-purple-300 mb-10 text-lg">
-          Welcome back{name ? `, ${name}` : ""} 👋
+          Welcome back{name ? `, ${name}` : ""}
         </p>
       ) : (
         <p className="text-purple-300 mb-10 text-lg">
