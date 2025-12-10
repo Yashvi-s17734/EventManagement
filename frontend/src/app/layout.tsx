@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Warmup from "./components/Warmup";
 
 
 export const metadata: Metadata = {
@@ -15,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Warmup />
         {children}
       </body>
     </html>

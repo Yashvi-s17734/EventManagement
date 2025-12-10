@@ -37,8 +37,6 @@ export default function CreateEvent() {
 
     try {
       if (!banner) throw new Error("Please upload a banner image");
-
-      // 1. Upload banner
       const formData = new FormData();
       formData.append("banner", banner);
 
@@ -54,8 +52,6 @@ export default function CreateEvent() {
       if (!uploadRes.ok) throw new Error(uploadData.message || "Upload failed");
 
       const bannerUrl = uploadData.url;
-
-      // 2. Create event
       await apiFetch("/events", {
         method: "POST",
         body: JSON.stringify({
@@ -100,8 +96,6 @@ if (role !== "ORGANIZER" && role !== "ADMIN") {
           {error && (
             <p className="text-red-400 text-center mb-4 font-medium">{error}</p>
           )}
-
-          {/* Event Title */}
           <div>
             <label className="block mb-1 text-purple-200">Event Name</label>
             <input
@@ -113,8 +107,6 @@ if (role !== "ORGANIZER" && role !== "ADMIN") {
                          focus:border-purple-500 focus:ring-2 focus:ring-purple-600 outline-none"
             />
           </div>
-
-          {/* Date */}
           <div>
             <label className="block mb-1 text-purple-200">Event Date</label>
             <div className="flex items-center gap-3 px-4 py-3 bg-white/10 border border-white/20 
@@ -129,8 +121,6 @@ if (role !== "ORGANIZER" && role !== "ADMIN") {
               />
             </div>
           </div>
-
-          {/* Location */}
           <div>
             <label className="block mb-1 text-purple-200">Location</label>
             <div className="flex items-center gap-3 px-4 py-3 bg-white/10 border border-white/20 
@@ -146,8 +136,6 @@ if (role !== "ORGANIZER" && role !== "ADMIN") {
               />
             </div>
           </div>
-
-          {/* Category */}
           <div>
             <label className="block mb-1 text-purple-200">Category</label>
             <select
@@ -163,8 +151,6 @@ if (role !== "ORGANIZER" && role !== "ADMIN") {
               <option className="text-black">Workshop</option>
             </select>
           </div>
-
-          {/* Description */}
           <div>
             <label className="block mb-1 text-purple-200">Description</label>
             <textarea
@@ -174,8 +160,6 @@ if (role !== "ORGANIZER" && role !== "ADMIN") {
                          focus:border-purple-500 focus:ring-2 focus:ring-purple-600 outline-none"
             ></textarea>
           </div>
-
-          {/* Banner Upload */}
           <div>
             <label className="block mb-1 text-purple-200">Event Banner</label>
             <div className="flex items-center gap-4 bg-white/10 p-3 rounded-xl border border-white/20">
@@ -198,8 +182,6 @@ if (role !== "ORGANIZER" && role !== "ADMIN") {
             {loading ? "Creating..." : "Create Event"}
           </button>
         </form>
-
-        {/* RIGHT PANEL — BANNER PREVIEW */}
         <div className="flex justify-center items-center">
           <div className="w-full max-w-md bg-white/5 p-5 rounded-2xl border border-white/10 
                           shadow-[0_0_35px_rgba(142,65,255,0.35)]">

@@ -7,6 +7,9 @@ export default function Home() {
   const [role, setRole] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
+   useEffect(() => {
+     fetch("https://eventmanagement-j5gp.onrender.com/health").catch(() => {});
+   }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -42,7 +45,6 @@ export default function Home() {
       )}
 
       <div className="flex flex-wrap gap-4">
-        {/* View Events */}
         <Link
           href="/events"
           className="px-6 py-3 bg-purple-600 rounded-xl hover:bg-purple-700 transition shadow-lg"
@@ -57,8 +59,6 @@ export default function Home() {
             + Create Event
           </Link>
         )}
-
-        {/* Login / Register */}
         {!loggedIn && (
           <>
             <Link
@@ -76,8 +76,6 @@ export default function Home() {
             </Link>
           </>
         )}
-
-        {/* Logout */}
         {loggedIn && (
           <button
             onClick={logout}

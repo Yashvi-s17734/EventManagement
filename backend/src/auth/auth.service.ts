@@ -18,33 +18,27 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto) {
-    // Check if email already exists
+
     const existingUser = await this.usersService.findByEmail(dto.email);
     if (existingUser) {
       throw new BadRequestException('Email already registered');
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-    // Create user
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
     const user = await this.usersService.createUser({
       name: dto.name,
       email: dto.email,
       password: hashedPassword,
       role: dto.role ?? Role.USER,
     });
-
-    // Generate JWT
     const token = await this.signToken(user.id, user.email, user.role as Role);
-
-    // Return user + token
     return {
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
-        role: user.role, // string from DB
+        role: user.role,
       },
       token,
     };

@@ -38,7 +38,6 @@ export default function EventDetailsPage() {
 
   return (
     <div className="min-h-screen px-6 py-10 max-w-4xl mx-auto text-white space-y-8">
-      {/* Banner */}
       {event.banner && (
        <img
   src={event.banner}
@@ -47,8 +46,6 @@ export default function EventDetailsPage() {
 />
 
       )}
-
-      {/* Event Card */}
       <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-[0_0_40px_rgba(142,65,255,0.3)] space-y-4">
         <h1 className="text-4xl font-bold text-purple-200">{event.title}</h1>
 
@@ -71,9 +68,8 @@ export default function EventDetailsPage() {
           {event.description || "No description provided."}
         </p>
 
-        {/* Buy Ticket Button */}
         <button
-          onClick={() => alert("Ticket booking (coming Day 5!)")}
+          onClick={() => alert("Ticket booking")}
           className="mt-6 px-6 py-3 bg-gradient-to-r from-purple-600 to-fuchsia-500 
                      rounded-xl font-semibold text-white transition-transform 
                      hover:scale-[1.03] shadow-lg shadow-purple-700/40"

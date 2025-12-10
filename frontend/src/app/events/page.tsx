@@ -139,8 +139,6 @@ export default function EventsPage() {
           <p className="text-gray-400 mt-2">Try adjusting filters or search</p>
         </div>
       )}
-
-      {/* Event Grid */}
       {!loading && events.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {events.map((ev) => (
@@ -171,8 +169,6 @@ export default function EventsPage() {
           ))}
         </div>
       )}
-
-      {/* Pagination */}
       {!loading && totalPages > 1 && (
         <div className="mt-10 flex justify-center items-center gap-4">
           <button
