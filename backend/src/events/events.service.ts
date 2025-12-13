@@ -50,9 +50,11 @@ export class EventsService {
       totalPages: Math.ceil(total / limit),
     };
   }
-  getEventById(id: string) {
-    return this.prisma.event.findUnique({
-      where: { id },
-    });
-  }
-}
+ getEventById(id: string) {
+  return this.prisma.event.findUnique({
+    where: { id },
+    include: {
+      tickets: true,
+    },
+  });
+}}

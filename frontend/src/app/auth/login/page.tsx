@@ -21,10 +21,7 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      // ONLY set cookie – NO localStorage!
       document.cookie = `token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
-
-      // Optional: also store name/role in localStorage for UI only (safe)
       if (data.user?.name) localStorage.setItem("name", data.user.name);
       if (data.user?.role) localStorage.setItem("role", data.user.role);
 
