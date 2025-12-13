@@ -69,9 +69,25 @@ export default function BookingDetailsPage() {
 
       <div style={{ textAlign: "center", margin: "30px 0" }}>
         <img
-          src={booking.qrImage}
-          alt="QR Code"
-          style={{ width: 300, height: 300, border: "1px solid #000" }}
+          src={
+            // If Cloudinary image exists and looks valid → use it
+            booking.qrImage &&
+            booking.qrImage.startsWith("https://res.cloudinary.com")
+              ? booking.qrImage
+              : // Otherwise instantly generate a perfect QR from the text code
+                `https://api.qrserver.com/v1/create-qr-code/?size=350x350&margin=20&data=${encodeURIComponent(
+                  booking.qrCode
+                )}`
+          }
+          alt="Your Ticket QR Code"
+          style={{
+            width: 340,
+            height: 340,
+            background: "white",
+            padding: 20,
+            borderRadius: 20,
+            boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+          }}
         />
       </div>
 
