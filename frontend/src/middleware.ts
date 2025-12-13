@@ -5,19 +5,12 @@ export function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   const { pathname } = req.nextUrl;
 
-  // 🚫 Logged-in user should NOT see login page
-  if (token && pathname === "/login") {
+  if (token && pathname.startsWith("/auth/login")) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  // 🚫 Not logged-in user should NOT see protected pages
-  if (
-    !token &&
-    (pathname.startsWith("/dashboard") ||
-      pathname.startsWith("/bookings") ||
-      pathname.startsWith("/admin"))
-  ) {
-    return NextResponse.redirect(new URL("/login", req.url));
+  if (!token && (pathname === "/" || pathname.startsWith("/bookings"))) {
+    return NextResponse.redirect(new URL("/auth/login", req.url));
   }
 
   return NextResponse.next();

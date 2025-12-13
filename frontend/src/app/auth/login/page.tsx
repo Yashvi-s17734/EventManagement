@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 
@@ -22,13 +22,13 @@ export default function LoginPage() {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
-document.cookie = `token=${data.token}; path=/;`;
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    router.replace("/");
+  }
+}, [router]);
 
-localStorage.setItem("token", data.token);
-localStorage.setItem("role", data.user.role);
-localStorage.setItem("name", data.user.name);
-
-router.replace("/");
 
     } catch (err) {
       if (err instanceof Error) {
