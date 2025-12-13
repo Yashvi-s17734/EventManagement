@@ -22,15 +22,14 @@ export default function LoginPage() {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
+document.cookie = `token=${data.token}; path=/;`;
 
-      // ✅ STORE TOKEN IN COOKIE (for middleware)
-      document.cookie = `token=${data.token}; path=/;`;
+localStorage.setItem("token", data.token);
+localStorage.setItem("role", data.user.role);
+localStorage.setItem("name", data.user.name);
 
-      // (Optional) localStorage for frontend usage
-      localStorage.setItem("role", data.user.role);
-      localStorage.setItem("name", data.user.name);
+router.replace("/");
 
-      router.replace("/"); // or "/dashboard"
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
