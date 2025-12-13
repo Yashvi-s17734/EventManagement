@@ -60,7 +60,7 @@ model Booking{
 
   quantity   Int
   totalPrice Int
-  qrCode     String
+  qrCode     String?
   qrImage    String?
 
   createdAt  DateTime @default(now())
