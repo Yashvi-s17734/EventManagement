@@ -7,9 +7,9 @@ export default function Home() {
   const [role, setRole] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
-   useEffect(() => {
-     fetch("https://eventmanagement-j5gp.onrender.com/health").catch(() => {});
-   }, []);
+  useEffect(() => {
+    fetch("https://eventmanagement-j5gp.onrender.com/health").catch(() => {});
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -20,14 +20,18 @@ export default function Home() {
     setRole(role);
     setName(name);
   }, []);
-  
+
   const loggedIn = !!token;
 
   function logout() {
-    localStorage.removeItem("token");
+    // Remove cookie
+    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+
+    // Optional cleanup
     localStorage.removeItem("role");
     localStorage.removeItem("name");
-    window.location.href = "/";
+
+    window.location.href = "/auth/login";
   }
 
   return (
@@ -36,7 +40,8 @@ export default function Home() {
 
       {loggedIn ? (
         <p className="text-purple-300 mb-10 text-lg">
-          Welcome back{name ? `, ${name.charAt(0).toUpperCase()}${name.slice(1)}` : ""}
+          Welcome back
+          {name ? `, ${name.charAt(0).toUpperCase()}${name.slice(1)}` : ""}
         </p>
       ) : (
         <p className="text-purple-300 mb-10 text-lg">

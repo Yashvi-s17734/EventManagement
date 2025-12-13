@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 
@@ -12,12 +11,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-    useEffect(() => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        router.replace("/");
-      }
-    }, [router]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -29,11 +22,15 @@ export default function LoginPage() {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
-      localStorage.setItem("token", data.token);
+
+      // ✅ STORE TOKEN IN COOKIE (for middleware)
+      document.cookie = `token=${data.token}; path=/;`;
+
+      // (Optional) localStorage for frontend usage
       localStorage.setItem("role", data.user.role);
       localStorage.setItem("name", data.user.name);
 
-      router.push("/");
+      router.replace("/"); // or "/dashboard"
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -61,7 +58,7 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full mt-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-600 outline-none"
+              className="w-full mt-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:border-purple-500 focus:ring-2 focus:ring-purple-600 outline-none"
               required
             />
           </div>
@@ -72,14 +69,14 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full mt-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-600 outline-none"
+              className="w-full mt-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:border-purple-500 focus:ring-2 focus:ring-purple-600 outline-none"
               required
             />
           </div>
 
           <button
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-500 text-white font-semibold hover:scale-[1.02] transition-transform shadow-lg shadow-purple-700/40"
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-500 text-white font-semibold shadow-lg shadow-purple-700/40"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
