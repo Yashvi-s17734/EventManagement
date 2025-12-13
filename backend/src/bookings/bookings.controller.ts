@@ -1,3 +1,4 @@
+// src/bookings/bookings.controller.ts
 import {
   Body,
   Controller,
@@ -14,29 +15,25 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 
 @Controller('bookings')
 export class BookingsController {
-  constructor(private bookingService: BookingsService) {}
+  constructor(private readonly bookingService: BookingsService) {}
 
   @UseGuards(JwtAuthGuard)
   @Post()
   async createBooking(@Req() req: any, @Body() dto: CreateBookingDto) {
-    // ADD THIS SAFETY CHECK
-    if (!req.user?.userId) {
-      throw new UnauthorizedException('User not authenticated');
-    }
-    console.log('CREATE BOOKING – user from JWT:', req.user); // ← you will see this in logs
-
+    console.log('CREATE BOOKING → req.user:', req.user);
+    if (!req.user?.userId)
+      throw new UnauthorizedException('Missing user in token');
     return this.bookingService.createBooking(req.user.userId, dto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async getMyBookings(@Req() req: any) {
-    // THIS IS THE MOST IMPORTANT PART
-    console.log('GET /bookings/me – req.user =', req.user);
+    console.log('GET /bookings/me → req.user =', req.user); // ← THIS LINE WILL SAVE YOUR LIFE
 
     if (!req.user?.userId) {
       throw new UnauthorizedException(
-        'No user in token – invalid or missing JWT',
+        'No user in JWT – token missing or invalid',
       );
     }
 
@@ -46,12 +43,8 @@ export class BookingsController {
   @UseGuards(JwtAuthGuard)
   @Get('event/:eventId')
   async getEventBooking(@Req() req: any, @Param('eventId') eventId: string) {
-    console.log('Event bookings request – user:', req.user);
-
-    if (req.user.role !== 'ORGANIZER' && req.user.role !== 'ADMIN') {
-      throw new UnauthorizedException(
-        'Only organizers can view event bookings',
-      );
+    if (!['ORGANIZER', 'ADMIN'].includes(req.user.role)) {
+      throw new UnauthorizedException('Forbidden');
     }
     return this.bookingService.getEventBookings(eventId);
   }
