@@ -16,6 +16,7 @@ model User {
   updatedAt DateTime @updatedAt
   
   events    Event[]  @relation("UserEvents")
+  bookings  Booking[]
 }
 model Event {
   id String @id @default(auto()) @map("_id") @db.ObjectId
@@ -30,7 +31,8 @@ model Event {
 
   organizerId String @db.ObjectId
   organizer User @relation(fields:[organizerId], references: [id], name: "UserEvents")
-   tickets     Ticket[]
+  tickets     Ticket[]
+  bookings    Booking[]
 }
 model Ticket {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -43,4 +45,23 @@ model Ticket {
   event       Event    @relation(fields: [eventId], references: [id])
 
   createdAt   DateTime @default(now())
+  bookings    Booking[]
+}
+model Booking{
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String   @db.ObjectId
+  user       User     @relation(fields:[userId],references:[id])
+
+  eventId    String   @db.ObjectId
+  event      Event    @relation(fields:[eventId],references:[id])
+
+  ticketId   String   @db.ObjectId
+  ticket     Ticket   @relation(fields:[ticketId],references:[id])
+
+  quantity   Int
+  totalPrice Int
+  qrCode     String
+  qrImage    String?
+
+  createdAt  DateTime @default(now())
 }

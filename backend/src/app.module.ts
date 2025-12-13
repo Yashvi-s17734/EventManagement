@@ -10,6 +10,7 @@ import { EventsModule } from './events/events.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { TicketsModule } from './tickets/tickets.module';
+import { BookingsModule } from './bookings/bookings.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { TicketsModule } from './tickets/tickets.module';
       serveRoot: '/uploads',
     }),
     TicketsModule,
+    BookingsModule,
   ],
   controllers: [AppController, UsersController],
   providers: [AppService, UsersService],

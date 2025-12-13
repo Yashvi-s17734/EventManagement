@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { Role } from '../common/enums/role.enums'; 
+import { Role } from '../common/enums/role.enums';
 
 @Injectable()
 export class AuthService {
@@ -18,12 +18,10 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto) {
-
     const existingUser = await this.usersService.findByEmail(dto.email);
     if (existingUser) {
       throw new BadRequestException('Email already registered');
     }
-
 
     const hashedPassword = await bcrypt.hash(dto.password, 10);
     const user = await this.usersService.createUser({
