@@ -24,11 +24,12 @@ export default function Home() {
   const loggedIn = !!token;
 
   function logout() {
-    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    // Clear cookie
+    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
 
-   localStorage.removeItem("token");
-   localStorage.removeItem("role");
-   localStorage.removeItem("name");
+    // Clear UI state
+    localStorage.removeItem("name");
+    localStorage.removeItem("role");
 
     window.location.href = "/auth/login";
   }

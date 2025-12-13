@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 
@@ -11,31 +11,26 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     try {
       const data = await apiFetch("/auth/login", {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
-useEffect(() => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    router.replace("/");
-  }
-}, [router]);
 
+      // ONLY set cookie – NO localStorage!
+      document.cookie = `token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
 
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Something went wrong");
-      }
+      // Optional: also store name/role in localStorage for UI only (safe)
+      if (data.user?.name) localStorage.setItem("name", data.user.name);
+      if (data.user?.role) localStorage.setItem("role", data.user.role);
+
+      router.replace("/");
+    } catch (err: any) {
+      setError(err.message || "Login failed");
     } finally {
       setLoading(false);
     }
