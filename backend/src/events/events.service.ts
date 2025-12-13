@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from "../../prisma/prisma.service";
+import { PrismaService } from '../../prisma/prisma.service';
 import { CreateEventDto } from './dto/create-event.dto';
 
 @Injectable()
@@ -50,11 +50,10 @@ export class EventsService {
       totalPages: Math.ceil(total / limit),
     };
   }
- getEventById(id: string) {
-  return this.prisma.event.findUnique({
-    where: { id },
-    include: {
-      tickets: true,
-    },
-  });
-}}
+  getEventById(id: string) {
+    return this.prisma.event.findUnique({
+      where: { id },
+      include: { tickets: true },
+    });
+  }
+}
