@@ -52,4 +52,8 @@ export class BookingsController {
   async verifyQr(@Param('qr') qr: string) {
     return this.bookingService.verifyQr(qr);
   }
+  @Get(':id')
+  async getBooking(@Param('id') id: string) {
+    return this.bookingService.getBookingById(id);
+  }
 }

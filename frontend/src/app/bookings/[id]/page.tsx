@@ -22,23 +22,13 @@ export default function BookingDetailsPage() {
 
     async function load() {
       try {
-        const bookings = await apiFetch("/bookings/me");
+        const booking = await apiFetch(`/bookings/${bookingId}`);
 
-        if (!Array.isArray(bookings)) {
-          throw new Error("Invalid response from server");
+        if (!booking || !booking.id) {
+          throw new Error("Booking not found");
         }
 
-        const found = bookings.find((b: any) => b.id === bookingId);
-
-        if (!found) {
-          console.log(
-            "Available bookings:",
-            bookings.map((b: any) => b.id)
-          );
-          setError(`Booking ${bookingId} not found in your account`);
-        }
-
-        setBooking(found);
+        setBooking(booking);
       } catch (err: any) {
         setError(err.message || "Failed to load booking");
         console.error(err);
@@ -49,6 +39,7 @@ export default function BookingDetailsPage() {
 
     load();
   }, [bookingId]);
+
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
