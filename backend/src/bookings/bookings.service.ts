@@ -96,11 +96,24 @@ export class BookingsService {
     return this.prisma.booking.findMany({
       where: { eventId },
       include: {
-        user: true,
-        ticket: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+        ticket: {
+          select: {
+            name: true, // VIP / Regular
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
   }
+
   async verifyQr(qrCode: string) {
     const booking = await this.prisma.booking.findFirst({
       where: { qrCode },
