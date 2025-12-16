@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
@@ -125,12 +126,32 @@ export class BookingsService {
       include: {
         event: true,
         ticket: true,
-        user: true, // optional, useful later
       },
     });
 
     if (!booking) {
       throw new NotFoundException('Booking not found');
+    }
+    delete (booking as any).userId;
+    delete (booking as any).qrCode;
+
+    return booking;
+  }
+  async getBookingForOwner(id: string, userId: string) {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id },
+      include: {
+        event: true,
+        ticket: true,
+      },
+    });
+
+    if (!booking) {
+      throw new NotFoundException('Booking not found');
+    }
+
+    if (booking.userId !== userId) {
+      throw new ForbiddenException('You do not own this booking');
     }
 
     return booking;

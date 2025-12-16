@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 
-export default function BookingDetailsPage() {
+export default function PublicBookingPage() {
   const params = useParams();
   const bookingId = Array.isArray(params.id) ? params.id[0] : params.id;
 
@@ -15,23 +15,17 @@ export default function BookingDetailsPage() {
 
   useEffect(() => {
     if (!bookingId) {
-      setError("No booking ID in URL");
+      setError("Invalid booking link");
       setLoading(false);
       return;
     }
 
     async function load() {
       try {
-        const booking = await apiFetch(`/bookings/${bookingId}`);
-
-        if (!booking || !booking.id) {
-          throw new Error("Booking not found");
-        }
-
-        setBooking(booking);
+        const data = await apiFetch(`/bookings/${bookingId}`);
+        setBooking(data);
       } catch (err: any) {
-        setError(err.message || "Failed to load booking");
-        console.error(err);
+        setError("Invalid or expired ticket");
       } finally {
         setLoading(false);
       }
@@ -40,40 +34,26 @@ export default function BookingDetailsPage() {
     load();
   }, [bookingId]);
 
-
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p>Loading ticket...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
-  if (!booking) return <p>Booking not found.</p>;
+  if (!booking) return <p>Ticket not found</p>;
 
   return (
-    <div
-      style={{ maxWidth: 800, margin: "20px auto", fontFamily: "sans-serif" }}
-    >
-      <h1>Your Ticket</h1>
+    <div style={{ maxWidth: 700, margin: "40px auto", textAlign: "center" }}>
+      <h1>🎫 Event Ticket</h1>
+
       <h2>{booking.event.title}</h2>
+
       <p>
         <strong>Ticket:</strong> {booking.ticket.name} × {booking.quantity}
       </p>
+
       <p>
-        <strong>Total:</strong> ₹{booking.totalPrice}
+        <strong>Total Paid:</strong> ₹{booking.totalPrice}
       </p>
 
-      <div style={{ textAlign: "center", margin: "30px 0" }}>
-        <img
-          src={
-            booking.qrImage &&
-            booking.qrImage.startsWith("https://res.cloudinary.com")
-              ? booking.qrImage
-              : `https://api.qrserver.com/v1/create-qr-code/?size=380x380&margin=20&data=${encodeURIComponent(
-                  `https://event-management-gamma-swart.vercel.app//bookings/${booking.id}`
-                )}`
-          }
-          alt="Your Ticket QR Code"
-        />
-      </div>
-
-      <p>
-        <strong>Code:</strong> {booking.qrCode}
+      <p style={{ marginTop: 20, color: "green", fontWeight: "bold" }}>
+        ✅ Valid Ticket
       </p>
     </div>
   );

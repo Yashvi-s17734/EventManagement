@@ -28,7 +28,7 @@ export class BookingsController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async getMyBookings(@Req() req: any) {
-    console.log('GET /bookings/me → req.user =', req.user); // ← THIS LINE WILL SAVE YOUR LIFE
+    console.log('GET /bookings/me → req.user =', req.user);
 
     if (!req.user?.userId) {
       throw new UnauthorizedException(
@@ -55,5 +55,10 @@ export class BookingsController {
   @Get(':id')
   async getBooking(@Param('id') id: string) {
     return this.bookingService.getBookingById(id);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Get(':id/owner')
+  getBookingForOwner(@Req() req, @Param('id') id: string) {
+    return this.bookingService.getBookingForOwner(id, req.user.userId);
   }
 }
