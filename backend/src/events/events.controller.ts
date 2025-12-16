@@ -9,6 +9,8 @@ import {
   Req,
   UseInterceptors,
   UploadedFile,
+  ForbiddenException,
+  UnauthorizedException,
 } from '@nestjs/common';
 
 import { EventsService } from './events.service';
@@ -36,14 +38,14 @@ const storage = new CloudinaryStorage({
 
 @Controller('events')
 export class EventsController {
-  constructor(private eventsService: EventsService) {}
+  constructor(private readonly eventsService: EventsService) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('upload-banner')
   @UseInterceptors(FileInterceptor('banner', { storage }))
   uploadBanner(@UploadedFile() file: Express.Multer.File) {
     if (!file) {
-      throw new Error('No file received');
+      throw new UnauthorizedException('No file received');
     }
 
     return {
@@ -54,16 +56,13 @@ export class EventsController {
   @UseGuards(JwtAuthGuard)
   @Post()
   createEvent(@Body() dto: CreateEventDto, @Req() req: any) {
-    if (req.user.role !== 'ORGANIZER' && req.user.role !== 'ADMIN') {
-      throw new Error('Only organizers can create events');
+    if (!['ORGANIZER', 'ADMIN'].includes(req.user.role)) {
+      throw new ForbiddenException('Only organizers can create events');
     }
+
     return this.eventsService.createEvent(dto, req.user.userId);
   }
 
-  @Get()
-  getEvents(@Query() query: any) {
-    return this.eventsService.getEvents(query);
-  }
   @UseGuards(JwtAuthGuard)
   @Get('my')
   async getMyEvents(@Req() req: any) {
@@ -72,14 +71,19 @@ export class EventsController {
     const userId = req.user?.userId;
 
     if (!userId) {
-      throw new Error('No user in token');
+      throw new UnauthorizedException('No user in token');
     }
 
     if (!['ORGANIZER', 'ADMIN'].includes(req.user.role)) {
-      throw new Error('Forbidden');
+      throw new ForbiddenException('Forbidden');
     }
 
     return this.eventsService.getMyEvents(userId);
+  }
+
+  @Get()
+  getEvents(@Query() query: any) {
+    return this.eventsService.getEvents(query);
   }
 
   @Get(':id')
