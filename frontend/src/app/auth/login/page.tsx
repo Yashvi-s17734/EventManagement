@@ -22,16 +22,10 @@ export default function LoginPage() {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
-
-      // ✅ cookie for middleware
       document.cookie = `token=${data.token}; path=/;`;
-
-      // ✅ localStorage for UI
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.user.role);
       localStorage.setItem("name", data.user.name);
-
-      // ✅ navigation AFTER state is settled
       window.location.href = "/";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");

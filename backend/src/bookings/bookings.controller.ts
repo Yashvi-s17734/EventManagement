@@ -1,4 +1,3 @@
-// src/bookings/bookings.controller.ts
 import {
   Body,
   Controller,

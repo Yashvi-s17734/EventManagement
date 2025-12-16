@@ -5,7 +5,6 @@ import * as QRCode from 'qrcode';
 import { v2 as cloudinary } from 'cloudinary';
 import * as streamifier from 'streamifier';
 
-// Cloudinary Config
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -22,7 +21,7 @@ export class BookingsService {
     const ticket = await this.prisma.ticket.findUnique({
       where: { id: ticketId },
     });
-    if (!ticket) throw new NotFoundException('Ticket type not found!');
+    if (!ticket) throw new NotFoundException('Ticket not found!');
 
     if (ticket.availableSeats < quantity) {
       throw new BadRequestException(
