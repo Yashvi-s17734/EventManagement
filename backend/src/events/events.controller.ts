@@ -16,7 +16,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateEventDto } from './dto/create-event.dto';
 
-
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
@@ -31,10 +30,9 @@ const storage = new CloudinaryStorage({
   params: () => ({
     folder: 'event-banners',
     format: 'jpg',
-    transformation: [{ width: 1200, height: 600, crop: 'fill' }]
-  })
+    transformation: [{ width: 1200, height: 600, crop: 'fill' }],
+  }),
 });
-
 
 @Controller('events')
 export class EventsController {
@@ -49,7 +47,7 @@ export class EventsController {
     }
 
     return {
-      url: file.path, 
+      url: file.path,
     };
   }
 
@@ -65,6 +63,23 @@ export class EventsController {
   @Get()
   getEvents(@Query() query: any) {
     return this.eventsService.getEvents(query);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Get('my')
+  async getMyEvents(@Req() req: any) {
+    console.log('GET /events/my → req.user =', req.user);
+
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      throw new Error('No user in token');
+    }
+
+    if (!['ORGANIZER', 'ADMIN'].includes(req.user.role)) {
+      throw new Error('Forbidden');
+    }
+
+    return this.eventsService.getMyEvents(userId);
   }
 
   @Get(':id')

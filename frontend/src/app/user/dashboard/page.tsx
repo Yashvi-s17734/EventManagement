@@ -7,6 +7,7 @@ export default function UserDashboard() {
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState("User");
+
   useEffect(() => {
     const storedName = localStorage.getItem("name");
     if (storedName) {
@@ -24,6 +25,8 @@ export default function UserDashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    console.log("Token:", localStorage.getItem("token"));
+
     if (!token) {
       window.location.href = "/auth/login";
       return;
@@ -32,28 +35,30 @@ export default function UserDashboard() {
     async function fetchBookings() {
       try {
         const res = await fetch(
-          "https://eventmanagement-j5gp.onrender.com/api/bookings/me",
+          "https://eventmanagement-j5gp.onrender.com/bookings/me",
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
-        console.log("API Response Status:", res.status);
-
         if (!res.ok) {
-          const errorText = await res.text();
-          console.log("Error response:", errorText);
-        } else {
-          const data = await res.json();
-          console.log("Bookings received:", data);
-          setBookings(data);
+          if (res.status === 401) {
+            logout();
+          }
+          return;
         }
+
+        const data = await res.json();
+        setBookings(data);
       } catch (err) {
-        console.error("Fetch error:", err);
+        console.error("Error fetching bookings:", err);
       } finally {
         setLoading(false);
       }
     }
+
     fetchBookings();
   }, []);
 
@@ -66,19 +71,19 @@ export default function UserDashboard() {
         <div className="flex flex-wrap gap-4 mb-12">
           <Link
             href="/events"
-            className="px-6 py-3 bg-purple-600 rounded-xl hover:bg-purple-700 transition shadow-lg"
+            className="px-6 py-3 bg-purple-600 rounded-xl hover:bg-purple-700"
           >
             View Events
           </Link>
+
           <button
             onClick={logout}
-            className="px-6 py-3 bg-red-600 rounded-xl hover:bg-red-700 transition"
+            className="px-6 py-3 bg-red-600 rounded-xl hover:bg-red-700"
           >
             Logout
           </button>
         </div>
 
-        {/* Bookings List */}
         <h2 className="text-3xl font-bold mb-6">My Booked Tickets</h2>
 
         {loading ? (
@@ -100,7 +105,7 @@ export default function UserDashboard() {
             {bookings.map((booking) => (
               <div
                 key={booking.id}
-                className="bg-purple-900/30 border border-purple-600 rounded-xl p-6 hover:border-purple-400 transition"
+                className="bg-purple-900/30 border border-purple-600 rounded-xl p-6"
               >
                 <h3 className="text-xl font-bold mb-2">
                   {booking.event.title}
@@ -112,7 +117,8 @@ export default function UserDashboard() {
                   Ticket: {booking.ticket.name} × {booking.quantity}
                 </p>
                 <p className="font-semibold mb-4">₹{booking.totalPrice}</p>
-                <Link href={`/booking/${booking.id}`}>
+
+                <Link href={`/bookings/${booking.id}`}>
                   <button className="w-full py-2 bg-green-600 rounded-lg hover:bg-green-700">
                     View Ticket
                   </button>
@@ -121,12 +127,6 @@ export default function UserDashboard() {
             ))}
           </div>
         )}
-
-        <div className="mt-12 text-center">
-          <Link href="/" className="text-purple-300 hover:underline">
-            ← Back to Home
-          </Link>
-        </div>
       </div>
     </main>
   );

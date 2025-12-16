@@ -33,7 +33,7 @@ export default function OrganizerDashboard() {
     async function fetchEvents() {
       try {
         const res = await fetch(
-          "https://eventmanagement-j5gp.onrender.com/api/events/my",
+          "https://eventmanagement-j5gp.onrender.com/events/my",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

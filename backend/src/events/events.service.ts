@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from "../../prisma/prisma.service";
 import { CreateEventDto } from './dto/create-event.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class EventsService {
@@ -55,4 +56,14 @@ export class EventsService {
       where: { id },
     });
   }
+async getMyEvents(userId: string) {
+  return this.prisma.event.findMany({
+    where: {
+      organizerId: {
+        equals: userId,
+      },
+    },
+  });
+}
+
 }
